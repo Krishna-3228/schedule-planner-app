@@ -1,0 +1,20 @@
+# Python envs
+backend/.venv/
+backend/__pycache__/
+
+# Python bytecode
+*.pyc
+__pycache__/
+
+# Environment variables
+.env
+
+# DB files (if local dev DB files ever exist)
+*.db
+
+# VSCode settings (optional)
+.vscode/
+
+# Docker & general junk
+*.log
+*.tmp
