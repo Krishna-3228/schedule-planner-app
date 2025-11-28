@@ -1,16 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { MainLayout } from "./layout/MainLayout";
+import { TaskTabs } from "./features/tasks/components/TaskTabs";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <h1 className="text-4xl font-bold text-emerald-400 p-6">
-      Tailwind is working 🚀
-    </h1>
-  )
+    <MainLayout>
+      <div className="max-w-3xl mx-auto space-y-8">
+        <h2 className="text-2xl font-bold">Your Tasks</h2>
+        <TaskTabs />
+      </div>
+    </MainLayout>
+  );
 }
 
-export default App
