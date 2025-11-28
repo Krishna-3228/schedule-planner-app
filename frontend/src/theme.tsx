@@ -1,10 +1,9 @@
-// src/theme.tsx
-import React, {
+import {
   createContext,
   useContext,
   useEffect,
   useState,
-  ReactNode,
+  type ReactNode,
 } from "react";
 
 type Theme = "light" | "dark";
@@ -13,7 +12,6 @@ interface ThemeContextValue {
   theme: Theme;
   toggleTheme: () => void;
 }
-
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
