@@ -1,66 +1,66 @@
 # app/services/task_service.py
-from typing import List, Optional
 from sqlalchemy.orm import Session
 
-from ..models import Task, TaskType, TaskStatus
-from ..schemas.task import TaskCreate, TaskUpdate
-from ..repositories.task_repository import TaskRepository
+from ..models.task import Task, TaskType
+from ..models.daily_task import DailyTaskMeta
+from ..models.deadline_task import DeadlineTaskMeta
+from ..models.scheduled_task import ScheduledTaskMeta
+from ..schemas import (
+    DailyTaskCreate,
+    DeadlineTaskCreate,
+    ScheduledTaskCreate,
+)
 
 
 class TaskService:
     def __init__(self, db: Session):
-        self.repo = TaskRepository(db)
+        self.db = db
 
-    def list_tasks(
-        self,
-        task_type: Optional[TaskType] = None,
-        status: Optional[TaskStatus] = None,
-    ) -> List[Task]:
-        if task_type is not None or status is not None:
-            return self.repo.get_filtered(task_type, status)
-        return self.repo.get_all()
+    def create_daily(self, data: DailyTaskCreate):
+        task = Task(title=data.title, description=data.description, type=TaskType.DAILY)
+        self.db.add(task)
+        self.db.flush()
 
-    def get_task(self, task_id: int) -> Optional[Task]:
-        return self.repo.get_by_id(task_id)
+        meta = DailyTaskMeta(
+            task_id=task.id,
+            repeat_rule=data.repeat_rule,
+            priority=data.priority,
+        )
 
-    def create_task(self, data: TaskCreate) -> Task:
-        task = Task(
-            title=data.title,
-            description=data.description,
-            type=data.type,
-            status=data.status,
+        self.db.add(meta)
+        self.db.commit()
+        self.db.refresh(task)
+        return task, meta
+
+    def create_deadline(self, data: DeadlineTaskCreate):
+        task = Task(title=data.title, description=data.description, type=TaskType.DEADLINE)
+        self.db.add(task)
+        self.db.flush()
+
+        meta = DeadlineTaskMeta(
+            task_id=task.id,
             deadline_at=data.deadline_at,
+            reminder_at=data.reminder_at,
+        )
+
+        self.db.add(meta)
+        self.db.commit()
+        self.db.refresh(task)
+        return task, meta
+
+    def create_scheduled(self, data: ScheduledTaskCreate):
+        task = Task(title=data.title, description=data.description, type=TaskType.SCHEDULED)
+        self.db.add(task)
+        self.db.flush()
+
+        meta = ScheduledTaskMeta(
+            task_id=task.id,
             scheduled_start=data.scheduled_start,
             scheduled_end=data.scheduled_end,
+            location=data.location,
         )
-        return self.repo.create(task)
 
-    def update_task(self, task_id: int, data: TaskUpdate) -> Optional[Task]:
-        task = self.repo.get_by_id(task_id)
-        if not task:
-            return None
-
-        # Apply only provided fields (partial update)
-        if data.title is not None:
-            task.title = data.title
-        if data.description is not None:
-            task.description = data.description
-        if data.type is not None:
-            task.type = data.type
-        if data.status is not None:
-            task.status = data.status
-        if data.deadline_at is not None:
-            task.deadline_at = data.deadline_at
-        if data.scheduled_start is not None:
-            task.scheduled_start = data.scheduled_start
-        if data.scheduled_end is not None:
-            task.scheduled_end = data.scheduled_end
-
-        return self.repo.update(task)
-
-    def delete_task(self, task_id: int) -> bool:
-        task = self.repo.get_by_id(task_id)
-        if not task:
-            return False
-        self.repo.delete(task)
-        return True
+        self.db.add(meta)
+        self.db.commit()
+        self.db.refresh(task)
+        return task, meta
