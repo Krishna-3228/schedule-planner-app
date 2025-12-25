@@ -1,6 +1,7 @@
 // src/layout/MainLayout.tsx
 import type { ReactNode } from "react";
 import { useTheme } from "../theme";
+import { Calendar } from "../features/tasks/components/Calender";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -25,9 +26,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             </div>
           </div>
 
-          <div>
-            {/* Calender */}
-          </div>
+          <Calendar />
 
           <nav className="flex-1 px-4 py-4 space-y-6 text-sm bg-slate-400 dark:bg-slate-800 overflow-y-auto no-scrollbar">
             <div>
