@@ -10,38 +10,42 @@ export function MainLayout({ children }: MainLayoutProps) {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
+    <div className="min-h-screen bg-slate-200 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
       <div className="flex h-screen max-h-screen">
         {/* Sidebar */}
-        <aside className="w-72 border-r border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur flex flex-col">
+        <aside className="w-80 border-r border-slate-300 dark:border-slate-800 bg-slate-200 dark:bg-slate-900/80 backdrop-blur flex flex-col">
           <div className="px-5 py-4 border-b border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
             <div>
               <h1 className="text-lg font-semibold tracking-tight">
-                Schedule Planner
+                Task Quest
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Your personal task space
+                Your personal task space (v0.1 · local development)
               </p>
             </div>
           </div>
 
-          <nav className="flex-1 px-4 py-4 space-y-6 text-sm">
+          <div>
+            {/* Calender */}
+          </div>
+
+          <nav className="flex-1 px-4 py-4 space-y-6 text-sm bg-slate-400 dark:bg-slate-800 overflow-y-auto no-scrollbar">
             <div>
               <p className="px-2 mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 Planning
               </p>
-              <button className="w-full text-left px-3 py-2 rounded-lg bg-slate-900 text-slate-50 dark:bg-slate-100 dark:text-slate-900 text-sm font-medium">
-                Tasks
-              </button>
-              <button className="w-full text-left px-3 py-2 mt-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
-                📅 Calendar <span className="text-xs text-slate-400">(coming soon)</span>
+              <button className="w-full text-left m-1 px-3 py-2 rounded-lg bg-emerald-500 text-slate-800 dark:text-slate-900 text-sm font-medium shadow-sm hover:bg-emerald-400 active:scale-[0.98] transition">
+                + Add New Tasks
               </button>
             </div>
+          </nav>
 
-            <div>
-              <p className="px-2 mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          <div className="border border-slate-900/60 dark:border-slate-800 rounded-lg m-1 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <p className="px-4 py-3 m-2 text-sm font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-50">
                 Settings
-              </p>
+            </p>
+            <div>
+              
               <button
                 onClick={toggleTheme}
                 className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -57,10 +61,6 @@ export function MainLayout({ children }: MainLayoutProps) {
                 </span>
               </button>
             </div>
-          </nav>
-
-          <div className="px-4 py-3 border-t border-slate-200/60 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
-            v0.1 · local development
           </div>
         </aside>
 
