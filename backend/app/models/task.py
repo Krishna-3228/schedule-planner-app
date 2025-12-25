@@ -5,6 +5,8 @@ import enum
 
 from ..db import Base
 
+from sqlalchemy.orm import relationship
+
 
 class TaskType(str, enum.Enum):
     DAILY = "DAILY"
@@ -29,9 +31,9 @@ class Task(Base):
     type = Column(Enum(TaskType), nullable=False, index=True)
     status = Column(Enum(TaskStatus), nullable=False, default=TaskStatus.TODO)
 
-    deadline_at = Column(DateTime(timezone=True), nullable=True)
-    scheduled_start = Column(DateTime(timezone=True), nullable=True)
-    scheduled_end = Column(DateTime(timezone=True), nullable=True)
-
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    daily_meta = relationship("DailyTaskMeta", uselist=False, back_populates="task")
+    deadline_meta = relationship("DeadlineTaskMeta", uselist=False, back_populates="task")
+    scheduled_meta = relationship("ScheduledTaskMeta", uselist=False, back_populates="task")
