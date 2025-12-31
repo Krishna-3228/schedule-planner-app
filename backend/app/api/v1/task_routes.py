@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.db import get_db
+from app.models.task import TaskType, TaskStatus
 from app.services.task_service import TaskService
 from app.schemas.task_base import TaskRead
 from app.schemas import (
@@ -12,15 +13,18 @@ from app.schemas import (
     DeadlineTaskCreate,
     ScheduledTaskRead,
     ScheduledTaskCreate,
-    TaskWithMeta
 )
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
 @router.get("/", response_model=list[DailyTaskRead | DeadlineTaskRead | ScheduledTaskRead])
-def list_all_tasks(db: Session = Depends(get_db)):
+def list_all_tasks(
+    type: TaskType | None = None,
+    status: TaskStatus | None = None,
+    db: Session = Depends(get_db)
+):
     service = TaskService(db)
-    return service.list_all_tasks()
+    return service.list_tasks(type=type, status=status)
 
 @router.post("/daily")
 def create_daily_task(data: DailyTaskCreate, db: Session = Depends(get_db)):

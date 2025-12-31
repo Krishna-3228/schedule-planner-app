@@ -2,7 +2,7 @@
 from sqlalchemy.orm import Session
 from typing import List
 
-from ..models.task import Task
+from ..models.task import Task, TaskType, TaskStatus
 from ..models.daily_task import DailyTaskMeta
 from ..models.deadline_task import DeadlineTaskMeta
 from ..models.scheduled_task import ScheduledTaskMeta
@@ -19,8 +19,16 @@ class TaskRepository:
         self.db.flush()
         return task
 
-    def get_all_tasks(self) -> List[Task]:
-        return self.db.query(Task).all()
+    def get_tasks(self, type: TaskType | None = None, status: TaskStatus | None = None):
+        query = self.db.query(Task)
+
+        if type is not None:
+            query = query.filter(Task.type == type)
+
+        if status is not None:
+            query = query.filter(Task.status == status)
+
+        return query.all()
     
     def get_daily_meta(self, task_id: int):
         return self.db.query(DailyTaskMeta).filter_by(task_id=task_id).first()

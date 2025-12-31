@@ -2,7 +2,7 @@
 from sqlalchemy.orm import Session
 from typing import List
 
-from ..models.task import Task, TaskType
+from ..models.task import Task, TaskType, TaskStatus 
 from ..models.daily_task import DailyTaskMeta
 from ..models.deadline_task import DeadlineTaskMeta
 from ..models.scheduled_task import ScheduledTaskMeta
@@ -86,8 +86,8 @@ class TaskService:
 
     # ---------- READ ----------
 
-    def list_all_tasks(self):
-        tasks = self.repo.get_all_tasks()
+    def list_tasks(self, type: TaskType | None = None, status: TaskStatus | None = None):
+        tasks = self.repo.get_tasks(type=type, status=status)
         results = []
 
         for task in tasks:
