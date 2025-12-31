@@ -1,3 +1,4 @@
+# app/schemas/daily_task.py
 from pydantic import BaseModel
 from .task_base import TaskRead
 
@@ -10,5 +11,5 @@ class DailyTaskCreate(BaseModel):
 
 
 class DailyTaskRead(TaskRead):
-    repeat_rule: str | None
-    priority: int | None
+    repeat_rule: str | None = None
+    priority: int | None = None

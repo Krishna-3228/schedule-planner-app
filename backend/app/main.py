@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .api.v1 import task_routes
 from .db import engine, Base
+from . import models
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Schedule Planner Backend",

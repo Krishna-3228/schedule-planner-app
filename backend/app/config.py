@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     # For now, let's default to a simple SQLite DB for local dev.
     # We'll override this with Postgres when we run Docker later.
     DATABASE_URL: str = Field(
-        default="sqlite:///./dev.db",
+        default="postgresql+psycopg://postgres:postgres@localhost:5432/planner_db",
         description="Database URL (override via env, e.g. Postgres in Docker)",
     )
 

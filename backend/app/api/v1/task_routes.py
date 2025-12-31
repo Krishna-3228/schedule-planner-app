@@ -4,14 +4,23 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.services.task_service import TaskService
+from app.schemas.task_base import TaskRead
 from app.schemas import (
+    DailyTaskRead,
     DailyTaskCreate,
+    DeadlineTaskRead,
     DeadlineTaskCreate,
+    ScheduledTaskRead,
     ScheduledTaskCreate,
+    TaskWithMeta
 )
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
+@router.get("/", response_model=list[DailyTaskRead | DeadlineTaskRead | ScheduledTaskRead])
+def list_all_tasks(db: Session = Depends(get_db)):
+    service = TaskService(db)
+    return service.list_all_tasks()
 
 @router.post("/daily")
 def create_daily_task(data: DailyTaskCreate, db: Session = Depends(get_db)):
