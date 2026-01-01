@@ -1,6 +1,7 @@
 # app/services/task_service.py
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime
 
 from ..models.task import Task, TaskType, TaskStatus 
 from ..models.daily_task import DailyTaskMeta
@@ -25,6 +26,8 @@ class TaskService:
             title=data.title,
             description=data.description,
             type=TaskType.DAILY,
+            status=data.status,
+            created_at=datetime.now()
         )
 
         task = self.repo.create_task(task)
@@ -46,6 +49,8 @@ class TaskService:
             title=data.title,
             description=data.description,
             type=TaskType.DEADLINE,
+            status=data.status,
+            created_at=datetime.now()
         )
 
         task = self.repo.create_task(task)
@@ -67,6 +72,8 @@ class TaskService:
             title=data.title,
             description=data.description,
             type=TaskType.SCHEDULED,
+            status=data.status,
+            created_at=datetime.now()
         )
 
         task = self.repo.create_task(task)
