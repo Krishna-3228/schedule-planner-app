@@ -18,3 +18,9 @@ class TaskRead(TaskBase):
 
     class Config:
         from_attributes = True
+
+class TaskUpdateBase(BaseModel):
+    type: str
+    title: str | None = None
+    description: str | None = None
+    status: str | None = None

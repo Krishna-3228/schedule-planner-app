@@ -30,6 +30,9 @@ class TaskRepository:
 
         return query.all()
     
+    def get_task_by_id(self, task_id: int):
+        return self.db.query(Task).filter_by(id=task_id).first()
+    
     def get_daily_meta(self, task_id: int):
         return self.db.query(DailyTaskMeta).filter_by(task_id=task_id).first()
 
@@ -58,3 +61,20 @@ class TaskRepository:
 
     def refresh(self, obj):
         self.db.refresh(obj)
+
+    # --------- Delete Tasks ---------
+
+    def delete_task(self, task):
+        self.db.delete(task)
+
+    def delete_daily_meta(self, meta):
+        if meta:
+            self.db.delete(meta)
+
+    def delete_deadline_meta(self, meta):
+        if meta:
+            self.db.delete(meta)
+
+    def delete_scheduled_meta(self, meta):
+        if meta:
+            self.db.delete(meta)

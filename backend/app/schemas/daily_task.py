@@ -1,6 +1,7 @@
 # app/schemas/daily_task.py
 from pydantic import BaseModel
-from .task_base import TaskRead, TaskStatus
+from typing_extensions import Literal
+from .task_base import TaskRead, TaskStatus, TaskUpdateBase
 
 
 class DailyTaskCreate(BaseModel):
@@ -12,5 +13,10 @@ class DailyTaskCreate(BaseModel):
 
 
 class DailyTaskRead(TaskRead):
+    repeat_rule: str | None = None
+    priority: int | None = None
+
+class DailyTaskUpdate(TaskUpdateBase):
+    type: Literal["DAILY"]
     repeat_rule: str | None = None
     priority: int | None = None
