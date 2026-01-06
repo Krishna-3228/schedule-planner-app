@@ -108,37 +108,40 @@ class TaskService:
                 "status": task.status,
                 "created_at": task.created_at,
                 "updated_at": task.updated_at,
+                "daily": None,
+                "deadline": None,
+                "scheduled": None,
             }
 
             if task.type == TaskType.DAILY:
                 meta = self.repo.get_daily_meta(task.id)
                 if meta:
-                    base.update({
+                    base["daily"] = {
                         "repeat_rule": meta.repeat_rule,
                         "priority": meta.priority,
-                    })
-                results.append(DailyTaskRead.model_validate(base))
+                    }
 
             elif task.type == TaskType.DEADLINE:
                 meta = self.repo.get_deadline_meta(task.id)
                 if meta:
-                    base.update({
+                    base["deadline"] = {
                         "deadline_at": meta.deadline_at,
                         "reminder_at": meta.reminder_at,
-                    })
-                results.append(DeadlineTaskRead.model_validate(base))
+                    }
 
             else:  # SCHEDULED
                 meta = self.repo.get_scheduled_meta(task.id)
                 if meta:
-                    base.update({
+                    base["scheduled"] = {
                         "scheduled_start": meta.scheduled_start,
                         "scheduled_end": meta.scheduled_end,
                         "location": meta.location,
-                    })
-                results.append(ScheduledTaskRead.model_validate(base))
+                    }
+
+            results.append(base)
 
         return results
+
         
     def update_task(self, task_id: int, data: TaskUpdate):
         task = self.repo.get_task_by_id(task_id)
@@ -180,43 +183,46 @@ class TaskService:
         if not task:
             raise HTTPException(status_code=404, detail="Task not found")
 
-        base = {
-                "id": task.id,
-                "title": task.title,
-                "description": task.description,
-                "type": task.type,
-                "status": task.status,
-                "created_at": task.created_at,
-                "updated_at": task.updated_at,
-            }
+        result = {
+            "id": task.id,
+            "title": task.title,
+            "description": task.description,
+            "type": task.type,
+            "status": task.status,
+            "created_at": task.created_at,
+            "updated_at": task.updated_at,
+            "daily": None,
+            "deadline": None,
+            "scheduled": None,
+        }
 
         if task.type == TaskType.DAILY:
             meta = self.repo.get_daily_meta(task.id)
             if meta:
-                base.update({
+                result["daily"] = {
                     "repeat_rule": meta.repeat_rule,
                     "priority": meta.priority,
-                })
-            return (DailyTaskRead.model_validate(base))
+                }
 
         elif task.type == TaskType.DEADLINE:
             meta = self.repo.get_deadline_meta(task.id)
             if meta:
-                base.update({
+                result["deadline"] = {
                     "deadline_at": meta.deadline_at,
                     "reminder_at": meta.reminder_at,
-                })
-            return (DeadlineTaskRead.model_validate(base))
+                }
 
         else:  # SCHEDULED
             meta = self.repo.get_scheduled_meta(task.id)
             if meta:
-                base.update({
+                result["scheduled"] = {
                     "scheduled_start": meta.scheduled_start,
                     "scheduled_end": meta.scheduled_end,
                     "location": meta.location,
-                })
-            return (ScheduledTaskRead.model_validate(base))
+                }
+
+        return result
+
         
     # --------- DELETE ---------
     

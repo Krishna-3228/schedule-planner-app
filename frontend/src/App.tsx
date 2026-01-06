@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { MainLayout } from "./layout/MainLayout";
-import { TaskTabs } from "./features/tasks/components/TaskTabs";
+import { TaskTabs } from "./features/tasks/pages/TaskTabs";
+import { TodayView } from "./features/tasks/pages/TodayView";
 
 export default function App() {
+  const [page, setPage] = useState<"today" | "all">("today");
+
   return (
     <MainLayout>
       <header className="space-y-2">
@@ -11,10 +15,30 @@ export default function App() {
         <p className="text-sm text-slate-500 dark:text-slate-400">
           Organize your daily, deadline-based, and scheduled work in one place.
         </p>
+
+        <div className="flex gap-3 mt-4">
+          <button
+            onClick={() => setPage("today")}
+            className={`px-3 py-1 rounded ${
+              page === "today" ? "bg-slate-900 text-white" : "border"
+            }`}
+          >
+            Today
+          </button>
+
+          <button
+            onClick={() => setPage("all")}
+            className={`px-3 py-1 rounded ${
+              page === "all" ? "bg-slate-900 text-white" : "border"
+            }`}
+          >
+            All Tasks
+          </button>
+        </div>
       </header>
 
       <section className="mt-6">
-        <TaskTabs />
+        {page === "today" ? <TodayView /> : <TaskTabs />}
       </section>
     </MainLayout>
   );

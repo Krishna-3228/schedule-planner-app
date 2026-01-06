@@ -15,12 +15,13 @@ from app.schemas import (
     DeadlineTaskCreate,
     ScheduledTaskRead,
     ScheduledTaskCreate,
-    TaskUpdate
+    TaskUpdate,
+    TaskOut,
 )
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
-@router.get("/", response_model=list[DailyTaskRead | DeadlineTaskRead | ScheduledTaskRead])
+@router.get("/", response_model=list[TaskOut])
 def list_all_tasks(
     type: TaskType | None = None,
     status: TaskStatus | None = None,
@@ -49,7 +50,7 @@ def create_scheduled_task(data: ScheduledTaskCreate, db: Session = Depends(get_d
     task, meta = service.create_scheduled(data)
     return {"task": task, "meta": {"scheduled_start": meta.scheduled_start, "scheduled_end": meta.scheduled_end, "location":meta.location}}
 
-@router.get("/{task_id}", response_model=DailyTaskRead | DeadlineTaskRead | ScheduledTaskRead)
+@router.get("/{task_id}", response_model=TaskOut)
 def get_task(task_id: int, db: Session = Depends(get_db)):
     service = TaskService(db)
     return service.get_task(task_id)
