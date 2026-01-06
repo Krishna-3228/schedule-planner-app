@@ -113,14 +113,6 @@ export function DailyTaskForm({
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1">
-                                <label className="text-sm font-medium">Reapeat Rule</label>
-                                <input
-                                    className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
-                                    value={repeatRule}
-                                    onChange={(e) => setRepeatRule(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-1">
                                 <label className="text-sm font-medium">Priority</label>
                                 <input
                                     className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
@@ -128,6 +120,14 @@ export function DailyTaskForm({
                                     onChange={(e) => setPriority(Number(e.target.value))}
                                 />
                             </div>
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium">Reapeat Rule</label>
+                                <input
+                                    className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
+                                    value={repeatRule}
+                                    onChange={(e) => setRepeatRule(e.target.value)}
+                                />
+                            </div>   
                         </div>
 
                         <div className="flex justify-end gap-3 pt-2">

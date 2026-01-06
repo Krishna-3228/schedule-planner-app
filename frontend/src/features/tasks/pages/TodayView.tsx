@@ -52,22 +52,23 @@ export function TodayView() {
             {/* TIMELINE */}
             <section>
                 <h3 className="font-semibold mb-3">Today's Timeline</h3>
-                <div className="space-y-2">
-                    {timeline.map(task => {
-                        const time =
-                            task.type === "DEADLINE"
-                                ? new Date(task.deadline!.deadline_at!).toLocaleTimeString()
-                                : new Date(task.scheduled!.scheduled_start!).toLocaleTimeString();
+                {timeline.length === 0 ? "No tasks scheduled for today." :
+                    (<div className="space-y-2">
+                        {timeline.map(task => {
+                            const time =
+                                task.type === "DEADLINE"
+                                    ? new Date(task.deadline!.deadline_at!).toLocaleTimeString()
+                                    : new Date(task.scheduled!.scheduled_start!).toLocaleTimeString();
 
-                        return (
-                            <div key={task.id} className="flex gap-4 items-start">
-                                <span className="w-20 text-sm text-slate-500 pt-3">{time}</span>
-                                <TaskCard task={task} />
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div key={task.id} className="flex gap-4 items-start">
+                                    <span className="w-20 text-sm text-slate-500 pt-3">{time}</span>
+                                    <TaskCard task={task} />
+                                </div>
+                            );
+                        })}
 
-                </div>
+                    </div>)}
             </section>
 
             {/* DAILY TASKS */}
@@ -78,15 +79,15 @@ export function TodayView() {
                         <DailyTaskCard
                             key={t.id}
                             task={t}
-                            onEdit={() => {}}
-                            onDelete={() => {}}
+                            onEdit={() => { }}
+                            onDelete={() => { }}
                         />
                     ))}
                 </div>
             </section>
 
 
-            
+
         </div>
     );
 }

@@ -57,10 +57,14 @@ export function TaskTabs() {
     setShowForm(true);
   };
 
-  const handleDeleteClick = async (task: Task) => {
+  const handleDeleteClick = async (id: number) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+
     const ok = window.confirm(`Delete "${task.title}"?`);
     if (!ok) return;
-    await deleteTask(task.id);
+
+    await deleteTask(id);
     await loadTasks(activeTab);
   };
 
@@ -130,7 +134,7 @@ export function TaskTabs() {
           ) : (
             <div className="space-y-4 flex flex-col">
               {tasks.map(task => (
-                <TaskCard key={task.id} task={task} />
+                <TaskCard key={task.id} task={task} onEdit={handleEditClick} onDelete={handleDeleteClick} />
               ))}
             </div>
           )}
