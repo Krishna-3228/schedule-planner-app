@@ -1,15 +1,20 @@
 // src/layout/MainLayout.tsx
-import type { ReactNode } from "react";
-import { useTheme } from "../theme";
+import { useState, type ReactNode } from "react";
 import { Calendar } from "../features/tasks/components/Calender";
+import { SettingsPanel } from "../features/tasks/components/SettingsPanel";
 
 interface MainLayoutProps {
+  page: "today" | "all";
   setPage: (page: "today" | "all") => void;
   children: ReactNode;
 }
 
-export function MainLayout({ setPage, children }: MainLayoutProps) {
-  const { theme, toggleTheme } = useTheme();
+export function MainLayout({ page, setPage, children }: MainLayoutProps) {
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+
+  function closeSettings() {
+    setShowSettings(false);
+  }
 
   return (
     <div className="min-h-screen bg-slate-200 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
@@ -29,41 +34,47 @@ export function MainLayout({ setPage, children }: MainLayoutProps) {
 
           <Calendar />
 
-          <nav className="flex-1 px-4 py-4 space-y-6 text-sm bg-slate-400 dark:bg-slate-800 overflow-y-auto no-scrollbar">
-            <div>
-              <p className="px-2 mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                Planning
-              </p>
-              <button className="w-full text-left m-1 px-3 py-2 rounded-lg bg-emerald-500 text-slate-800 dark:text-slate-900 text-sm font-medium shadow-sm hover:bg-emerald-400 active:scale-[0.98] transition"
-                onClick={() => setPage("all")}>
-                + Add New Tasks
+          <nav className="flex-1 px-4 py-2 text-sm bg-slate-100 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-y-auto no-scrollbar">
+            <div className="space-y-1">
+
+              <button
+                onClick={() => setPage("today")}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left font-medium transition
+                    ${page === "today"
+                    ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white"
+                    : "text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
+                  }`}
+
+              >
+                <span className="text-lg">🏠</span>
+                <span>Home</span>
+              </button>
+
+              <button
+                onClick={() => setPage("all")}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left font-medium transition
+                    ${page === "all"
+                    ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white"
+                    : "text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
+                  }`}              >
+                <span className="text-lg">➕</span>
+                <span>Add New Tasks</span>
               </button>
             </div>
           </nav>
 
-          <div className="border border-slate-900/60 dark:border-slate-800 rounded-lg m-1 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-            <p className="px-4 py-3 m-2 text-sm font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-50">
-                Settings
-            </p>
-            <div>
-              
-              <button
-                onClick={toggleTheme}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-              >
-                <span className="text-sm">
-                  Theme
-                  <span className="block text-[11px] text-slate-500 dark:text-slate-400">
-                    Switch between light and dark
-                  </span>
-                </span>
-                <span className="text-xs px-2 py-1 rounded-full bg-slate-900 text-slate-50 dark:bg-slate-100 dark:text-slate-900">
-                  {theme === "dark" ? "Dark" : "Light"}
-                </span>
-              </button>
-            </div>
-          </div>
+          <button
+            onClick={() => setShowSettings(true)}
+            className="w-full text-left border border-slate-900/60 dark:border-slate-800 rounded-lg m-1 px-4 py-3
+             hover:bg-slate-100 dark:hover:bg-slate-800 transition
+             text-sm font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-50"
+          >
+            <span>⚙️</span> Settings
+          </button>
+
         </aside>
+
+        {showSettings && <SettingsPanel closeSettings={closeSettings} />}
 
         {/* Main content */}
         <main className="flex-1 overflow-y-auto">

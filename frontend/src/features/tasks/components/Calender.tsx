@@ -41,7 +41,7 @@ export function Calendar() {
     }
 
     return (
-        <div className="mx-2 mt-3 rounded-xl border border-slate-300 dark:border-slate-700 p-3">
+        <div className="mx-2 rounded-xl border border-slate-300 dark:border-slate-700 p-3">
             <div className="flex items-center justify-between mb-3 px-2">
                 <button onClick={goPrevMonth} className="text-slate-400 hover:text-white">‹</button>
 
