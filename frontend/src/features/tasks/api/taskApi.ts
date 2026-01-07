@@ -1,5 +1,5 @@
 // src/features/tasks/api/taskApi.ts
-import type { Task, TaskStatus, TaskType } from "../types";
+import type { Task, TaskStatus, TaskType, Weekday } from "../types";
 
 const BASE_URL = "http://127.0.0.1:8000/api/v1/tasks";
 
@@ -8,10 +8,8 @@ export interface DailyTaskPayload {
   description?: string | null;
   type: TaskType;
   status?: TaskStatus;
-  repeat_rule?: string | null;
+  repeat_days: Weekday[];
   priority?: number | null;
-
-
 }
 export interface DeadlineTaskPayload {
   title: string;

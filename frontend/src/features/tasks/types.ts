@@ -2,8 +2,10 @@
 export type TaskType = "DAILY" | "DEADLINE" | "SCHEDULED";
 export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED";
 
+export type Weekday = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+
 export interface DailyMeta {
-  repeat_rule?: string | null;
+  repeat_days: Weekday[];
   priority?: number | null;
 }
 

@@ -34,7 +34,7 @@ def list_all_tasks(
 def create_daily_task(data: DailyTaskCreate, db: Session = Depends(get_db)):
     service = TaskService(db)
     task, meta = service.create_daily(data)
-    return {"task": task, "meta": {"repeat_rule": meta.repeat_rule, "priority": meta.priority}}
+    return {"task": task, "meta": {"repeat_days": meta.repeat_days, "priority": meta.priority}}
 
 
 @router.post("/deadline")

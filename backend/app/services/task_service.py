@@ -36,7 +36,7 @@ class TaskService:
 
         meta = DailyTaskMeta(
             task_id=task.id,
-            repeat_rule=data.repeat_rule,
+            repeat_days=data.repeat_days,
             priority=data.priority,
         )
 
@@ -117,7 +117,7 @@ class TaskService:
                 meta = self.repo.get_daily_meta(task.id)
                 if meta:
                     base["daily"] = {
-                        "repeat_rule": meta.repeat_rule,
+                        "repeat_days": meta.repeat_days,
                         "priority": meta.priority,
                     }
 
@@ -159,7 +159,7 @@ class TaskService:
         # ----- Type-specific fields -----
         if task.type == TaskType.DAILY:
             meta = self.repo.get_daily_meta(task.id)
-            meta.repeat_rule = data.repeat_rule
+            meta.repeat_days = data.repeat_days
             meta.priority = data.priority
 
         elif task.type == TaskType.DEADLINE:
@@ -200,7 +200,7 @@ class TaskService:
             meta = self.repo.get_daily_meta(task.id)
             if meta:
                 result["daily"] = {
-                    "repeat_rule": meta.repeat_rule,
+                    "repeat_days": meta.repeat_days,
                     "priority": meta.priority,
                 }
 

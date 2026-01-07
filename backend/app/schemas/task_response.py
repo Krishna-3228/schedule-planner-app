@@ -1,11 +1,12 @@
 # app/schemas/task_response.py
 from pydantic import BaseModel
 from datetime import datetime
+from app.models.daily_task import Weekday
 
 from ..models.task import TaskType, TaskStatus
 
 class DailyOut(BaseModel):
-    repeat_rule: str | None
+    repeat_days: list[Weekday] = []
     priority: int | None
 
 class DeadlineOut(BaseModel):

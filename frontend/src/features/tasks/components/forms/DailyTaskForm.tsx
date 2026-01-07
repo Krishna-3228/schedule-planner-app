@@ -1,8 +1,9 @@
 import { useState } from "react";
-import type { Task, TaskStatus } from "../../types";
+import type { Task, TaskStatus, Weekday } from "../../types";
 import { createTask, updateTask, type DailyTaskPayload } from "../../api/taskApi";
 
 const STATUSES: TaskStatus[] = ["TODO", "IN_PROGRESS", "DONE", "CANCELLED"];
+const DAYS: Weekday[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 interface TaskFormProps {
     mode: "create" | "edit";
@@ -22,7 +23,7 @@ export function DailyTaskForm({
     const [description, setDescription] = useState<string>(task?.description ?? "")
     const [status, setStatus] = useState<TaskStatus>(task?.status ?? "TODO")
 
-    const [repeatRule, setRepeatRule] = useState<string>(task?.daily?.repeat_rule ?? "")
+    const [repeatDays, setRepeatDays] = useState<Weekday[]>(task?.daily?.repeat_days ?? []);
     const [priority, setPriority] = useState<number>(task?.daily?.priority ?? 0)
 
     const [submitting, setSubmitting] = useState(false);
@@ -35,7 +36,7 @@ export function DailyTaskForm({
             description: description || null,
             type: "DAILY",
             status,
-            repeat_rule: repeatRule,
+            repeat_days: repeatDays,
             priority
 
         };
@@ -58,7 +59,17 @@ export function DailyTaskForm({
 
             onSuccess();
         } catch (err: any) {
-            setError(err.message ?? "Something went wrong");
+            const backend = err?.data;
+
+            if (backend?.detail) {
+                const message = backend.detail
+                    .map((d: any) => d.msg)
+                    .join(", ");
+
+                setError(message);
+            } else {
+                setError("Something went wrong");
+            }
         } finally {
             setSubmitting(false);
         }
@@ -111,8 +122,8 @@ export function DailyTaskForm({
                             </select>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-1">
+                        <div >
+                            <div className="space-y-1 w-1/2">
                                 <label className="text-sm font-medium">Priority</label>
                                 <input
                                     className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
@@ -120,14 +131,37 @@ export function DailyTaskForm({
                                     onChange={(e) => setPriority(Number(e.target.value))}
                                 />
                             </div>
-                            <div className="space-y-1">
-                                <label className="text-sm font-medium">Reapeat Rule</label>
-                                <input
-                                    className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
-                                    value={repeatRule}
-                                    onChange={(e) => setRepeatRule(e.target.value)}
-                                />
-                            </div>   
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Repeat Days</label>
+
+                                <div className="grid grid-cols-7 gap-2">
+                                    {DAYS.map(day => {
+                                        const active = repeatDays.includes(day);
+
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={day}
+                                                onClick={() =>
+                                                    setRepeatDays(prev =>
+                                                        active ? prev.filter(d => d !== day) : [...prev, day]
+                                                    )
+                                                }
+                                                className={`
+                                                    px-2 py-1 rounded-lg text-xs font-semibold tracking-wide
+                                                    border transition
+                                                    ${active
+                                                        ? "bg-emerald-500 text-slate-900 border-emerald-400"
+                                                        : "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700"}
+                                                    `}
+                                                >
+                                                {day}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
                         </div>
 
                         <div className="flex justify-end gap-3 pt-2">

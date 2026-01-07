@@ -8,6 +8,8 @@ interface Props {
 }
 
 export function DailyTaskCard({ task, onEdit, onDelete }: Props) {
+  const days = task.daily?.repeat_days ?? [];
+  
   return (
     <div className="group relative w-full md:w-3/4 rounded-2xl border border-slate-700/60 bg-gradient-to-br from-slate-900 to-slate-800 p-5 shadow-lg transition-all hover:shadow-emerald-500/10 hover:border-emerald-500/50">
       
@@ -47,10 +49,21 @@ export function DailyTaskCard({ task, onEdit, onDelete }: Props) {
           <span>Priority: {task.daily?.priority ?? "—"}</span>
         </div>
 
-        <div className="flex items-center gap-1">
-          <span className="text-sky-400">⟳</span>
-          <span>Repeat: {task.daily?.repeat_rule ?? "—"}</span>
-        </div>
+        <div className="flex flex-wrap gap-1">
+            {days.length === 0 ? (
+              <span className="text-slate-500">No repeat</span>
+            ) : (
+              days.map(day => (
+                <span
+                  key={day}
+                  className="px-2 py-0.5 rounded-md text-xs font-medium 
+                    bg-slate-700/60 text-slate-200 border border-slate-600/60"
+                >
+                  {day}
+                </span>
+              ))
+            )}
+          </div>
       </div>
     </div>
   );
