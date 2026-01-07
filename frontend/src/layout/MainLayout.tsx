@@ -4,10 +4,11 @@ import { useTheme } from "../theme";
 import { Calendar } from "../features/tasks/components/Calender";
 
 interface MainLayoutProps {
+  setPage: (page: "today" | "all") => void;
   children: ReactNode;
 }
 
-export function MainLayout({ children }: MainLayoutProps) {
+export function MainLayout({ setPage, children }: MainLayoutProps) {
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -33,7 +34,8 @@ export function MainLayout({ children }: MainLayoutProps) {
               <p className="px-2 mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 Planning
               </p>
-              <button className="w-full text-left m-1 px-3 py-2 rounded-lg bg-emerald-500 text-slate-800 dark:text-slate-900 text-sm font-medium shadow-sm hover:bg-emerald-400 active:scale-[0.98] transition">
+              <button className="w-full text-left m-1 px-3 py-2 rounded-lg bg-emerald-500 text-slate-800 dark:text-slate-900 text-sm font-medium shadow-sm hover:bg-emerald-400 active:scale-[0.98] transition"
+                onClick={() => setPage("all")}>
                 + Add New Tasks
               </button>
             </div>

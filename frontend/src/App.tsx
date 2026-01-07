@@ -7,7 +7,7 @@ export default function App() {
   const [page, setPage] = useState<"today" | "all">("today");
 
   return (
-    <MainLayout>
+    <MainLayout setPage={setPage}>
       <header className="space-y-2">
         <h2 className="text-2xl font-semibold tracking-tight">
           Today & upcoming tasks

@@ -11,6 +11,8 @@ function isoToLocal(iso?: string | null): string {
     return iso.slice(0, 16);
 }
 
+const nowLocal = new Date().toISOString().slice(0, 16);
+
 interface TaskFormProps {
     mode: "create" | "edit";
     task?: Task;
@@ -33,7 +35,7 @@ export function ScheduledTaskForm({
     const [location, setLocation] = useState<string>(task?.scheduled?.location ?? "")
 
     const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);   
 
     function buildPayload(): ScheduledTaskPayload {
 
@@ -64,7 +66,17 @@ export function ScheduledTaskForm({
 
             onSuccess();
         } catch (err: any) {
-            setError(err.message ?? "Something went wrong");
+            const backend = err?.data;
+
+            if (backend?.detail) {
+                const message = backend.detail
+                    .map((d: any) => d.msg)
+                    .join(", ");
+
+                setError(message);
+            } else {
+                setError("Something went wrong");
+            }
         } finally {
             setSubmitting(false);
         }
@@ -124,6 +136,7 @@ export function ScheduledTaskForm({
                                     type="datetime-local"
                                     className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
                                     value={scheduledStart}
+                                    min={nowLocal}
                                     onChange={(e) => setScheduledStart(e.target.value)}
                                 />
                             </div>
@@ -133,6 +146,7 @@ export function ScheduledTaskForm({
                                     type="datetime-local"
                                     className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
                                     value={scheduledEnd}
+                                    min={nowLocal}
                                     onChange={(e) => setScheduledEnd(e.target.value)}
                                 />
                             </div>

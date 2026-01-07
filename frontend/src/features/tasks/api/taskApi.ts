@@ -49,14 +49,27 @@ export async function fetchTasks(params?: {
   return data;
 }
 
+async function handleResponse(res: Response) {
+  const data = await res.json();
+
+  if (!res.ok) {
+    const error = new Error("Request failed");
+    (error as any).data = data;   // 👈 attach backend error body
+    throw error;
+  }
+
+  return data;
+}
+
+
 export async function createTask(payload: DailyTaskPayload | DeadlineTaskPayload | ScheduledTaskPayload, path: string): Promise<Task> {
   const res = await fetch(`${BASE_URL}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error("Failed to create task");
-  return res.json();
+  
+  return handleResponse(res);
 }
 
 export async function updateTask(
@@ -69,8 +82,7 @@ export async function updateTask(
     body: JSON.stringify(payload),
   });
 
-  if (!res.ok) throw new Error("Failed to update task");
-  return res.json();
+  return handleResponse(res);
 }
 
 export async function deleteTask(id: number): Promise<void> {

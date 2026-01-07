@@ -6,10 +6,18 @@ import { createTask, updateTask, type DeadlineTaskPayload } from "../../api/task
 const STATUSES: TaskStatus[] = ["TODO", "IN_PROGRESS", "DONE", "CANCELLED"];
 
 function isoToLocal(iso?: string | null): string {
-  if (!iso) return "";
-  // "2025-11-28T12:34:56Z" → "2025-11-28T12:34"
-  return iso.slice(0, 16);
+    if (!iso) return "";
+    // "2025-11-28T12:34:56Z" → "2025-11-28T12:34"
+    return iso.slice(0, 16);
 }
+
+function localToIso(value: string | null | undefined): string | null {
+    if (!value) return null;
+    return new Date(value).toISOString();
+}
+
+
+const nowLocal = new Date().toISOString().slice(0, 16);
 
 interface TaskFormProps {
     mode: "create" | "edit";
@@ -41,8 +49,8 @@ export function DeadlineTaskForm({
             description: description || null,
             type: "DEADLINE",
             status,
-            deadline_at: isoToLocal(deadlineAt),
-            reminder_at: isoToLocal(reminderAt)
+            deadline_at: localToIso(deadlineAt),
+            reminder_at: localToIso(reminderAt)
 
         };
     }
@@ -63,8 +71,20 @@ export function DeadlineTaskForm({
 
             onSuccess();
         } catch (err: any) {
-            setError(err.message ?? "Something went wrong");
-        } finally {
+            const backend = err?.data;
+
+            if (backend?.detail) {
+                const message = backend.detail
+                    .map((d: any) => d.msg)
+                    .join(", ");
+
+                setError(message);
+            } else {
+                setError("Something went wrong");
+            }
+        }
+
+        finally {
             setSubmitting(false);
         }
     };
@@ -124,6 +144,7 @@ export function DeadlineTaskForm({
                                     type="datetime-local"
                                     className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
                                     value={deadlineAt}
+                                    min={nowLocal}
                                     onChange={(e) => setDeadlineAt(e.target.value)}
                                 />
                             </div>
@@ -133,6 +154,7 @@ export function DeadlineTaskForm({
                                     type="datetime-local"
                                     className="w-full rounded bg-slate-800 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-500/50"
                                     value={reminderAt}
+                                    min={nowLocal}
                                     onChange={(e) => setReminderAt(e.target.value)}
                                 />
                             </div>
