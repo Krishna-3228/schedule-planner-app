@@ -1,9 +1,11 @@
-// src/features/tasks/pages/TodayView.tsx
+// src/features/tasks/pages/DateView.tsx
 import { useEffect, useState } from "react";
 import { fetchTasks } from "../api/taskApi";
 import type { Task } from "../types";
 import { TaskCard } from "../components/cards/TaskCard";
 import { DailyTaskCard } from "../components/cards/DailyTaskCard";
+
+const WEEKDAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"] as const;
 
 function isSameDay(dateStr: string | null | undefined, target: Date) {
     if (!dateStr) return false;
@@ -17,14 +19,16 @@ function isSameDay(dateStr: string | null | undefined, target: Date) {
 }
 
 
-export function TodayView({ selectedDate }: { selectedDate: Date }) {
+export function DateView({ selectedDate }: { selectedDate: Date }) {
     const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
         fetchTasks().then(setTasks);
     }, []);
 
-    const dailyTasks = tasks.filter(t => t.type === "DAILY");
+    const weekday = WEEKDAYS[selectedDate.getDay()]; // 0 (Sun) to 6 (Sat)
+
+    const dailyTasks = tasks.filter(t => t.type === "DAILY").filter(t => t.daily?.repeat_days?.includes(weekday) ?? false);
 
     const timeline = tasks
         .filter(t => {

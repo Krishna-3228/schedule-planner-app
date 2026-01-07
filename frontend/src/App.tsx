@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MainLayout } from "./layout/MainLayout";
 import { TaskTabs } from "./features/tasks/pages/TaskTabs";
-import { TodayView } from "./features/tasks/pages/TodayView";
+import { DateView} from "./features/tasks/pages/DateView";
 
 export default function App() {
   const [page, setPage] = useState<"today" | "all">("today");
@@ -20,7 +20,7 @@ export default function App() {
       </header>
 
       <section className="mt-6">
-        {page === "today" ? <TodayView selectedDate={selectedDate} /> : <TaskTabs />}
+        {page === "today" ? <DateView selectedDate={selectedDate} /> : <TaskTabs />}
       </section>
     </MainLayout>
   );
