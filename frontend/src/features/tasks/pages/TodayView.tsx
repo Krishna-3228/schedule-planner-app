@@ -5,19 +5,19 @@ import type { Task } from "../types";
 import { TaskCard } from "../components/cards/TaskCard";
 import { DailyTaskCard } from "../components/cards/DailyTaskCard";
 
-function isToday(dateStr?: string | null) {
+function isSameDay(dateStr: string | null | undefined, target: Date) {
     if (!dateStr) return false;
     const d = new Date(dateStr);
-    const today = new Date();
 
     return (
-        d.getFullYear() === today.getFullYear() &&
-        d.getMonth() === today.getMonth() &&
-        d.getDate() === today.getDate()
+        d.getFullYear() === target.getFullYear() &&
+        d.getMonth() === target.getMonth() &&
+        d.getDate() === target.getDate()
     );
 }
 
-export function TodayView() {
+
+export function TodayView({ selectedDate }: { selectedDate: Date }) {
     const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
@@ -28,8 +28,8 @@ export function TodayView() {
 
     const timeline = tasks
         .filter(t => {
-            if (t.type === "DEADLINE") return isToday(t.deadline?.deadline_at);
-            if (t.type === "SCHEDULED") return isToday(t.scheduled?.scheduled_start);
+            if (t.type === "DEADLINE") return isSameDay(t.deadline?.deadline_at, selectedDate);
+            if (t.type === "SCHEDULED") return isSameDay(t.scheduled?.scheduled_start, selectedDate);
             return false;
         })
         .sort((a, b) => {
@@ -51,8 +51,10 @@ export function TodayView() {
 
             {/* TIMELINE */}
             <section>
-                <h3 className="font-semibold mb-3">Today's Timeline</h3>
-                {timeline.length === 0 ? "No tasks scheduled for today." :
+                <h3 className="font-semibold mb-3">
+                    {selectedDate.toDateString() === new Date().toDateString() ? "Today's Timeline" : 'Tasks for ' + selectedDate.toDateString()}
+                </h3>
+                {timeline.length === 0 ? "No tasks scheduled for this Date." :
                     (<div className="space-y-2">
                         {timeline.map(task => {
                             const time =

@@ -6,10 +6,12 @@ import { SettingsPanel } from "../features/tasks/components/SettingsPanel";
 interface MainLayoutProps {
   page: "today" | "all";
   setPage: (page: "today" | "all") => void;
+  selectedDate: Date;
+  onSelectDate: (date: Date) => void;
   children: ReactNode;
 }
 
-export function MainLayout({ page, setPage, children }: MainLayoutProps) {
+export function MainLayout({ page, setPage, selectedDate, onSelectDate, children }: MainLayoutProps) {
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
   function closeSettings() {
@@ -32,7 +34,7 @@ export function MainLayout({ page, setPage, children }: MainLayoutProps) {
             </div>
           </div>
 
-          <Calendar />
+          <Calendar selectedDate={selectedDate} onSelectDate={onSelectDate} />
 
           <nav className="flex-1 px-4 py-2 text-sm bg-slate-100 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-y-auto no-scrollbar">
             <div className="space-y-1">

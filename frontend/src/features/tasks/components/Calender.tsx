@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function Calendar() {
+export function Calendar({ selectedDate, onSelectDate }: { selectedDate: Date; onSelectDate: (date: Date) => void }) {
     const today = new Date();
 
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -70,10 +70,17 @@ export function Calendar() {
                         day &&
                         new Date(year, month, day) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
+                    const isSelected =
+                        day &&
+                        day === selectedDate.getDate() &&
+                        month === selectedDate.getMonth() &&
+                        year === selectedDate.getFullYear();
+
                     return (
                         <div
                             key={i}
-                            className="h-8 flex items-center justify-center"
+                            className={"h-8 flex items-center justify-center" + (isSelected ? " bg-slate-300 dark:bg-slate-700 rounded-lg" : "")}
+                            onClick={() => day && onSelectDate(new Date(year, month, day))}
                         >
                             {day && (
                                 <span

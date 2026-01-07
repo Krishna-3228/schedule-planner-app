@@ -5,9 +5,11 @@ import { TodayView } from "./features/tasks/pages/TodayView";
 
 export default function App() {
   const [page, setPage] = useState<"today" | "all">("today");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
 
   return (
-    <MainLayout page={page} setPage={setPage}>
+    <MainLayout page={page} setPage={setPage} selectedDate={selectedDate} onSelectDate={setSelectedDate}>
       <header className="space-y-2">
         <h2 className="text-2xl font-semibold tracking-tight">
           Today & upcoming tasks
@@ -18,7 +20,7 @@ export default function App() {
       </header>
 
       <section className="mt-6">
-        {page === "today" ? <TodayView /> : <TaskTabs />}
+        {page === "today" ? <TodayView selectedDate={selectedDate} /> : <TaskTabs />}
       </section>
     </MainLayout>
   );
