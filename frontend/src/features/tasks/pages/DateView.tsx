@@ -80,16 +80,19 @@ export function DateView({ selectedDate }: { selectedDate: Date }) {
             {/* DAILY TASKS */}
             <section>
                 <h3 className="font-semibold mb-3">Daily Tasks</h3>
-                <div className="space-y-3">
-                    {dailyTasks.map(t => (
-                        <DailyTaskCard
-                            key={t.id}
-                            task={t}
-                            onEdit={() => { }}
-                            onDelete={() => { }}
-                        />
-                    ))}
-                </div>
+                {dailyTasks.length === 0 ? ("No daily tasks for this day.") : (
+                    <div className="space-y-3">
+                        {dailyTasks.map(t => (
+                            <DailyTaskCard
+                                key={t.id}
+                                task={t}
+                                onEdit={() => { }}
+                                onDelete={() => { }}
+                            />
+                        ))}
+                    </div>
+                )}
+
             </section>
 
 

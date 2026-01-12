@@ -2,7 +2,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing_extensions import Annotated
-from pydantic import Field
 
 from app.db import get_db
 from app.models import TaskType, TaskStatus

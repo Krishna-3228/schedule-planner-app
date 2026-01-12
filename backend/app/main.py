@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api.v1 import task_routes
+from .api.v1 import task_routes, todo_routes
 from .db import engine, Base
 from . import models
 
@@ -34,6 +34,7 @@ def on_startup():
 
 
 app.include_router(task_routes.router, prefix="/api/v1")
+app.include_router(todo_routes.router, prefix="/api/v1")
 
 
 @app.get("/health")

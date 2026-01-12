@@ -4,8 +4,8 @@ import { Calendar } from "../features/tasks/components/Calender";
 import { SettingsPanel } from "../features/tasks/components/SettingsPanel";
 
 interface MainLayoutProps {
-  page: "today" | "all";
-  setPage: (page: "today" | "all") => void;
+  page: "home" | "todo" | "addtask";
+  setPage: (page: "home" | "todo" | "addtask") => void;
   selectedDate: Date;
   onSelectDate: (date: Date) => void;
   children: ReactNode;
@@ -40,9 +40,9 @@ export function MainLayout({ page, setPage, selectedDate, onSelectDate, children
             <div className="space-y-1">
 
               <button
-                onClick={() => setPage("today")}
+                onClick={() => setPage("home")}
                 className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left font-medium transition
-                    ${page === "today"
+                    ${page === "home"
                     ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white"
                     : "text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
                   }`}
@@ -53,9 +53,20 @@ export function MainLayout({ page, setPage, selectedDate, onSelectDate, children
               </button>
 
               <button
-                onClick={() => setPage("all")}
+                onClick={() => setPage("todo")}
                 className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left font-medium transition
-                    ${page === "all"
+                    ${page === "todo"
+                    ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white"
+                    : "text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
+                  }`}              >
+                <span className="text-lg">📝</span>
+                <span>Todo List</span>
+              </button>
+              
+              <button
+                onClick={() => setPage("addtask")}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left font-medium transition
+                    ${page === "addtask"
                     ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white"
                     : "text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
                   }`}              >
