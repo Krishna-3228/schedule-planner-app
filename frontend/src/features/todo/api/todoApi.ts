@@ -25,6 +25,15 @@ export async function deleteList(listId: number) {
   if (!res.ok) throw new Error("Failed to delete list");
 }
 
+export async function updateList(listId: number, title: string) {
+  const res = await fetch(`${BASE}/lists/${listId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title }),
+  });
+  if (!res.ok) throw new Error("Failed to update list");
+}
+
 export async function fetchItems(listId: number): Promise<TodoItem[]> {
   const res = await fetch(`${BASE}/lists/${listId}/items`);
   if (!res.ok) throw new Error("Failed to load items");

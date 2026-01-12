@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import type { TodoItem, TodoList } from "../types";
-import { fetchItems, createItem, deleteItem } from "../api/todoApi";
+import { fetchItems, createItem, deleteItem, updateList } from "../api/todoApi";
 import { TodoItemCard } from "./TodoItemCard";
 
 
-export function TodoListCard({ todolist, onDeleteList }: { todolist: TodoList, onDeleteList: (listId: number) => void }) {
+export function TodoListCard({ todolist, onDeleteList, onUpdateList }: { todolist: TodoList, onDeleteList: (listId: number) => void, onUpdateList: (listId: number, newTitle: string) => void }) {
     const [list_items, setListItems] = useState<TodoItem[]>([]);
     const [insertingItem, setInsertingItem] = useState<boolean>(false);
     const [newItemText, setNewItemText] = useState<string>("");
+
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [editListTitle, setEditListTitle] = useState<string>(todolist.title);
 
     const loadItems = async (listId: number) => {
         try {
@@ -41,7 +44,7 @@ export function TodoListCard({ todolist, onDeleteList }: { todolist: TodoList, o
             console.error("Failed to delete item", e);
         }
     }
-    
+
 
     return (
         <div className="
@@ -59,7 +62,51 @@ export function TodoListCard({ todolist, onDeleteList }: { todolist: TodoList, o
                 mb-4
                 ">
                 <span className="text-xl">📄</span>
-                {todolist.title}
+                {isEditing ? (
+                    <input
+                        type="text"
+                        value={editListTitle}
+                        onChange={(e) => {
+                            setEditListTitle(e.target.value);
+                        }}
+                        onKeyDown={e => e.key === "Enter" && onUpdateList(todolist.id, editListTitle) && setIsEditing(false)}
+
+                        className="bg-transparent border-b border-emerald-500 focus:outline-none focus:border-emerald-400"
+                    />
+                ) : (
+                    todolist.title
+                )}
+                <button
+                    title="Edit list"
+                    className="
+                        absolute top-4 right-12
+                        w-7 h-7
+                        flex items-center justify-center
+                        rounded-full
+
+                        text-slate-400
+                        opacity-0
+                        scale-90
+
+                        group-hover:opacity-100
+                        group-hover:scale-100
+
+                        hover:text-red-400
+                        hover:bg-red-500/10
+
+                        transition-all duration-200
+                        "
+                    onClick={() => {
+                        setIsEditing(!isEditing);
+                    }}
+                >
+                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                    </svg>
+
+
+                </button>
+
                 <button
                     title="Delete list"
                     className="
@@ -84,9 +131,8 @@ export function TodoListCard({ todolist, onDeleteList }: { todolist: TodoList, o
                         onDeleteList(todolist.id);
                     }}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                     </svg>
                 </button>
             </h2>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchLists, createList, deleteList } from "../api/todoApi";
+import { fetchLists, createList, deleteList, updateList } from "../api/todoApi";
 import type { TodoList } from "../types";
 import { TodoListCard } from "../components/TodoListCard";
 
@@ -32,7 +32,14 @@ export function TodoPage() {
         }
     }
 
-
+    const handleEditListTitle = async (listId: number, newTitle: string) => {
+        try {
+            await updateList(listId, newTitle);
+            setLists(prev => prev.map(list => list.id === listId ? { ...list, title: newTitle } : list));
+        } catch (e) {
+            console.error("Failed to update list title", e);
+        }
+    }
 
 
     return (
@@ -43,6 +50,7 @@ export function TodoPage() {
                     key={list.id}
                     todolist={list}
                     onDeleteList={handleDeleteList}
+                    onUpdateList={handleEditListTitle}
                 />
             ))}
 
